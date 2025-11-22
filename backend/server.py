@@ -260,7 +260,10 @@ async def get_matches(league_id: str):
         matches = generate_sample_matches(league_id)
         if matches:
             matches_collection.insert_many(matches)
-        return {"matches": matches}
+            # Fetch them back without _id
+            existing_matches = list(matches_collection.find({"league_id": league_id}, {"_id": 0}))
+            return {"matches": existing_matches}
+        return {"matches": []}
     
     return {"matches": existing_matches}
 
