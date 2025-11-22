@@ -285,7 +285,10 @@ async def get_prediction(match_id: str):
     prediction = generate_prediction(match)
     predictions_collection.insert_one(prediction)
     
-    return prediction
+    # Fetch it back without _id
+    saved_prediction = predictions_collection.find_one({"match_id": match_id}, {"_id": 0})
+    
+    return saved_prediction
 
 @app.get("/api/stats")
 async def get_stats():
